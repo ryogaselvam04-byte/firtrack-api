@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FitTrack AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ============ LOADING SCREEN ============ -->
+<div id="boot-loader" class="boot-loader">
+  <div class="boot-mark">FT</div>
+  <div class="boot-spinner"></div>
+  <p class="boot-text">Loading FitTrack AI…</p>
+</div>
+
+<!-- ============ AUTH VIEW ============ -->
+<section id="view-auth" class="auth-screen hidden">
+  <div class="auth-visual">
+    <div class="auth-visual-glow"></div>
+    <div class="auth-visual-content">
+      <span class="visual-tag">FitTrack AI</span>
+      <h2>Train with data.<br>Recover with a plan.<br>Improve with AI.</h2>
+      <div class="visual-stats">
+        <div><strong>30-day</strong><span>guided plan</span></div>
+        <div><strong>AI</strong><span>coach &amp; insights</span></div>
+        <div><strong>Live</strong><span>chat assistant</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-panel">
+    <div class="auth-brand">
+      <span class="brand-mark">FT</span>
+      <h1>FitTrack <em>AI</em></h1>
+      <p class="brand-sub">Log the work. Let the coach read it.</p>
+    </div>
+
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab is-active" data-tab="login" role="tab">Log in</button>
+      <button class="auth-tab" data-tab="register" role="tab">Create account</button>
+    </div>
+
+    <form id="form-login" class="auth-form is-active" novalidate>
+      <label>Email
+        <input type="email" name="email" autocomplete="email" required />
+      </label>
+      <label>Password
+        <input type="password" name="password" autocomplete="current-password" required />
+      </label>
+      <p class="form-error" data-error-for="login"></p>
+      <button type="submit" class="btn btn-primary btn-block">Log in</button>
+    </form>
+
+    <form id="form-register" class="auth-form" novalidate>
+      <label>Name
+        <input type="text" name="name" autocomplete="name" required />
+      </label>
+      <label>Email
+        <input type="email" name="email" autocomplete="email" required />
+      </label>
+      <label>Password
+        <input type="password" name="password" autocomplete="new-password" minlength="6" required />
+        <span class="field-hint">At least 6 characters</span>
+      </label>
+      <p class="form-error" data-error-for="register"></p>
+      <p class="form-hint hidden" id="register-login-hint">
+        Already have an account? <a href="#" id="link-goto-login">Log in instead</a>
+      </p>
+      <button type="submit" class="btn btn-primary btn-block">Create account</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ APP VIEW ============ -->
+<section id="view-app" class="app-screen">
+
+  <nav class="rail">
+    <div class="rail-brand">FT</div>
+    <button class="rail-btn is-active" data-view="overview" title="Overview">
+      <span class="rail-icon">◆</span><span class="rail-label">Overview</span>
+    </button>
+    <button class="rail-btn" data-view="workouts" title="Workouts">
+      <span class="rail-icon">▤</span><span class="rail-label">Workouts</span>
+    </button>
+    <button class="rail-btn" data-view="planner" title="Planner">
+      <span class="rail-icon">▦</span><span class="rail-label">Planner</span>
+    </button>
+    <button class="rail-btn" data-view="food" title="Food">
+      <span class="rail-icon">●</span><span class="rail-label">Food</span>
+    </button>
+    <button class="rail-btn" data-view="coach" title="AI Coach">
+      <span class="rail-icon">✦</span><span class="rail-label">Coach</span>
+    </button>
+    <button class="rail-btn" data-view="insights" title="Insights">
+      <span class="rail-icon">▲</span><span class="rail-label">Insights</span>
+    </button>
+    <button class="rail-btn" data-view="chat" title="Chat">
+      <span class="rail-icon">◐</span><span class="rail-label">Chat</span>
+    </button>
+    <button class="rail-btn" data-view="premium" title="Premium">
+      <span class="rail-icon">♛</span><span class="rail-label">Premium</span>
+    </button>
+    <button class="rail-btn" data-view="contact" title="Contact">
+      <span class="rail-icon">✉</span><span class="rail-label">Contact</span>
+    </button>
+    <button class="rail-btn" data-view="feedback" title="Feedback">
+      <span class="rail-icon">★</span><span class="rail-label">Feedback</span>
+    </button>
+    <button class="rail-btn hidden" data-view="admin" id="rail-admin-btn" title="Admin">
+      <span class="rail-icon">⚙</span><span class="rail-label">Admin</span>
+    </button>
+    <button class="rail-btn rail-btn-logout" id="btn-logout" title="Log out">
+      <span class="rail-icon">⏻</span><span class="rail-label">Log out</span>
+    </button>
+  </nav>
+
+  <main class="stage">
+
+    <!-- ---- Overview ---- -->
+    <div class="panel is-active" data-panel="overview">
+      <header class="panel-head">
+        <h2>Overview</h2>
+        <p class="hello">Welcome back, <span id="user-name">—</span></p>
+      </header>
+
+      <div class="ticker" id="ticker">
+        <div class="ticker-stat">
+          <span class="ticker-num" id="stat-total">0</span>
+          <span class="ticker-label">Workouts</span>
+        </div>
+        <div class="ticker-stat">
+          <span class="ticker-num" id="stat-duration">0</span>
+          <span class="ticker-label">Avg minutes</span>
+        </div>
+        <div class="ticker-stat">
+          <span class="ticker-num" id="stat-calories">0</span>
+          <span class="ticker-label">Calories burned</span>
+        </div>
+      </div>
+
+      <h3 class="section-title">Recent log</h3>
+      <div class="log-list" id="recent-list"></div>
+    </div>
+
+    <!-- ---- Workouts ---- -->
+    <div class="panel" data-panel="workouts">
+      <header class="panel-head">
+        <h2>Workouts</h2>
+        <div class="head-actions">
+          <button class="btn btn-ghost" id="btn-load-workout-plan">Load 30-day plan</button>
+          <button class="btn btn-primary" id="btn-new-workout">+ Add workout</button>
+        </div>
+      </header>
+
+      <div class="search-row">
+        <input type="text" id="search-name" placeholder="Search by name…" />
+        <input type="text" id="search-category" placeholder="Category…" />
+        <input type="date" id="search-date" />
+        <button class="btn btn-ghost" id="btn-search">Search</button>
+        <button class="btn btn-ghost" id="btn-clear-search">Clear</button>
+      </div>
+
+      <div class="log-list" id="workout-list"></div>
+    </div>
+
+    <!-- ---- Planner (day-wise workouts) ---- -->
+    <div class="panel" data-panel="planner">
+      <header class="panel-head">
+        <h2>Planner</h2>
+        <p class="hello">Every day you trained, and what you did.</p>
+      </header>
+
+      <h3 class="section-title">Typical week (5 core sessions)</h3>
+      <div class="workout-template" id="workout-template"></div>
+
+      <h3 class="section-title">Your log, day by day</h3>
+      <div class="day-list" id="planner-list"></div>
+    </div>
+
+    <!-- ---- Food log ---- -->
+    <div class="panel" data-panel="food">
+      <header class="panel-head">
+        <h2>Food</h2>
+        <div class="head-actions">
+          <button class="btn btn-ghost" id="btn-load-food-plan">Load 30-day plan</button>
+          <button class="btn btn-primary" id="btn-new-food">+ Log food</button>
+        </div>
+      </header>
+
+      <div class="food-banner">🍽️ <span>Eat to match the work you put in.</span></div>
+
+      <h3 class="section-title">Typical day</h3>
+      <div class="meal-template" id="meal-template"></div>
+
+      <div class="search-row">
+        <input type="text" id="food-search-name" placeholder="Search by name…" />
+        <select id="food-search-meal">
+          <option value="">Any meal</option>
+          <option>Breakfast</option>
+          <option>Lunch</option>
+          <option>Dinner</option>
+          <option>Snack</option>
+        </select>
+        <input type="date" id="food-search-date" />
+        <button class="btn btn-ghost" id="btn-food-search">Search</button>
+        <button class="btn btn-ghost" id="btn-food-clear-search">Clear</button>
+      </div>
+
+      <h3 class="section-title">Your log</h3>
+      <div class="log-list" id="food-list"></div>
+    </div>
+
+    <!-- ---- Coach (AI recommendation) ---- -->
+    <div class="panel" data-panel="coach">
+      <header class="panel-head">
+        <h2>AI Coach</h2>
+        <p class="hello">Tell it where you're starting from.</p>
+      </header>
+
+      <form id="form-coach" class="inline-form">
+        <label>Age
+          <input type="number" name="age" min="10" max="100" required />
+        </label>
+        <label>Fitness goal
+          <select name="fitnessGoal" required>
+            <option value="">Choose one</option>
+            <option>Weight Loss</option>
+            <option>Muscle Gain</option>
+            <option>Endurance</option>
+            <option>General Fitness</option>
+            <option>Strength</option>
+          </select>
+        </label>
+        <label>Experience level
+          <select name="experienceLevel" required>
+            <option value="">Choose one</option>
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+          </select>
+        </label>
+        <button type="submit" class="btn btn-primary">Get my plan</button>
+      </form>
+
+      <p class="form-error" data-error-for="coach"></p>
+      <div id="coach-loading" class="loading-note hidden">Reaching the coach…</div>
+      <div id="coach-result" class="ai-result"></div>
+    </div>
+
+    <!-- ---- Insights ---- -->
+    <div class="panel" data-panel="insights">
+      <header class="panel-head">
+        <h2>Insights</h2>
+        <p class="hello">Reads your logged workouts and summarizes progress.</p>
+      </header>
+
+      <button class="btn btn-primary" id="btn-run-insights">Analyze my training</button>
+      <p class="form-error" data-error-for="insights"></p>
+      <div id="insights-loading" class="loading-note hidden">Crunching your numbers…</div>
+      <div id="insights-result" class="ai-result"></div>
+    </div>
+
+    <!-- ---- Chat (AI chatbot) ---- -->
+    <div class="panel" data-panel="chat">
+      <header class="panel-head">
+        <h2>Chat</h2>
+        <p class="hello">Ask about workouts, nutrition, recovery — anything.</p>
+      </header>
+
+      <div class="chat-window" id="chat-window">
+        <div class="chat-bubble bot">Hey! I'm your FitTrack assistant. What do you want to know?</div>
+      </div>
+      <p class="form-error" data-error-for="chat"></p>
+      <form id="form-chat" class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Type a message…" autocomplete="off" required />
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+    </div>
+
+    <!-- ---- Premium (payment) ---- -->
+    <div class="panel" data-panel="premium">
+      <header class="panel-head">
+        <h2>Premium</h2>
+        <p class="hello" id="premium-status">Free plan</p>
+      </header>
+
+      <p class="form-error" data-error-for="premium"></p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tag">Monthly</div>
+          <div class="price-amount">₹199<span>/month</span></div>
+          <ul class="price-perks">
+            <li>Unlimited AI coach &amp; insights</li>
+            <li>Unlimited AI chat</li>
+            <li>Priority support</li>
+          </ul>
+          <button class="btn btn-primary btn-block" data-plan="monthly">Upgrade — Monthly</button>
+        </div>
+        <div class="price-card is-featured">
+          <div class="price-tag">Yearly <span class="price-save">Save 16%</span></div>
+          <div class="price-amount">₹1,999<span>/year</span></div>
+          <ul class="price-perks">
+            <li>Everything in Monthly</li>
+            <li>2 months free</li>
+            <li>Early access to new features</li>
+          </ul>
+          <button class="btn btn-primary btn-block" data-plan="yearly">Upgrade — Yearly</button>
+        </div>
+      </div>
+
+      <p class="field-hint" style="margin-top:16px;">
+        Payments run through Stripe Checkout in test mode — use card
+        <code>4242 4242 4242 4242</code>, any future date, any CVC. No real money moves.
+      </p>
+
+      <h3 class="section-title">Payment history</h3>
+      <div class="log-list" id="payment-list"></div>
+    </div>
+
+    <!-- ---- Contact ---- -->
+    <div class="panel" data-panel="contact">
+      <header class="panel-head">
+        <h2>Contact</h2>
+        <p class="hello">Questions, bugs, ideas — reach out.</p>
+      </header>
+
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:support@fittrackai.app">
+          <span class="ticon">✉</span>
+          <div class="tname">Email</div>
+          <div class="tmeta">support@fittrackai.app</div>
+        </a>
+        <a class="contact-card" href="tel:+911234567890">
+          <span class="ticon">☎</span>
+          <div class="tname">Phone</div>
+          <div class="tmeta">+91 12345 67890</div>
+        </a>
+      </div>
+      <p class="field-hint" style="margin-top:14px;">
+        (Edit the email/phone in <code>index.html</code> — search for "Contact" — to use your own.)
+      </p>
+    </div>
+
+    <!-- ---- Feedback ---- -->
+    <div class="panel" data-panel="feedback">
+      <header class="panel-head">
+        <h2>Feedback</h2>
+        <p class="hello">Tell us what's working and what's not.</p>
+      </header>
+
+      <form id="form-feedback" class="inline-form" style="flex-direction:column; align-items:stretch;">
+        <label>Your feedback
+          <textarea name="message" rows="4" placeholder="What should we improve?" required></textarea>
+        </label>
+        <label>Rating <span class="field-hint">optional</span>
+          <select name="rating">
+            <option value="">No rating</option>
+            <option value="5">★★★★★ — Excellent</option>
+            <option value="4">★★★★☆ — Good</option>
+            <option value="3">★★★☆☆ — Okay</option>
+            <option value="2">★★☆☆☆ — Poor</option>
+            <option value="1">★☆☆☆☆ — Bad</option>
+          </select>
+        </label>
+        <p class="form-error" data-error-for="feedback"></p>
+        <button type="submit" class="btn btn-primary">Submit feedback</button>
+      </form>
+
+      <h3 class="section-title">Your feedback history</h3>
+      <div class="log-list" id="feedback-list"></div>
+    </div>
+
+    <!-- ---- Admin ---- -->
+    <div class="panel" data-panel="admin">
+      <header class="panel-head">
+        <h2>Admin</h2>
+        <p class="hello">Platform-wide view.</p>
+      </header>
+
+      <div class="ticker four-col" id="admin-ticker">
+        <div class="ticker-stat"><span class="ticker-num" id="admin-stat-users">0</span><span class="ticker-label">Users</span></div>
+        <div class="ticker-stat"><span class="ticker-num" id="admin-stat-workouts">0</span><span class="ticker-label">Workouts logged</span></div>
+        <div class="ticker-stat"><span class="ticker-num" id="admin-stat-food">0</span><span class="ticker-label">Food entries</span></div>
+        <div class="ticker-stat"><span class="ticker-num" id="admin-stat-feedback">0</span><span class="ticker-label">Feedback</span></div>
+      </div>
+
+      <h3 class="section-title">Users</h3>
+      <div class="log-list" id="admin-users-list"></div>
+
+      <h3 class="section-title">All feedback</h3>
+      <div class="log-list" id="admin-feedback-list"></div>
+    </div>
+
+  </main>
+</section>
+
+<!-- ============ WORKOUT MODAL ============ -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-title">Add workout</h3>
+      <button class="modal-close" id="modal-close">&times;</button>
+    </div>
+    <form id="form-workout">
+      <input type="hidden" name="id" />
+      <label>Workout name
+        <input type="text" name="workoutName" required />
+      </label>
+      <label>Category
+        <input type="text" name="category" placeholder="Cardio, Strength, Yoga…" required />
+      </label>
+      <div class="form-row">
+        <label>Duration (min)
+          <input type="number" name="duration" min="1" required />
+        </label>
+        <label>Calories burned
+          <input type="number" name="caloriesBurned" min="0" required />
+        </label>
+      </div>
+      <label>Date
+        <input type="date" name="workoutDate" required />
+      </label>
+      <p class="form-error" data-error-for="workout"></p>
+      <button type="submit" class="btn btn-primary btn-block">Save workout</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ FOOD MODAL ============ -->
+<div class="modal-backdrop" id="food-modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="food-modal-title">Log food</h3>
+      <button class="modal-close" id="food-modal-close">&times;</button>
+    </div>
+    <form id="form-food">
+      <input type="hidden" name="id" />
+      <label>Food name
+        <input type="text" name="foodName" placeholder="Rice and dal, chicken salad…" required />
+      </label>
+      <div class="form-row">
+        <label>Meal
+          <select name="mealType" required>
+            <option value="">Choose one</option>
+            <option>Breakfast</option>
+            <option>Lunch</option>
+            <option>Dinner</option>
+            <option>Snack</option>
+          </select>
+        </label>
+        <label>Calories
+          <input type="number" name="calories" min="0" required />
+        </label>
+      </div>
+      <label>Quantity <span class="field-hint">optional</span>
+        <input type="text" name="quantity" placeholder="1 bowl, 200g…" />
+      </label>
+      <label>Date
+        <input type="date" name="foodDate" required />
+      </label>
+      <p class="form-error" data-error-for="food"></p>
+      <button type="submit" class="btn btn-primary btn-block">Save entry</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/samplePlan.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
